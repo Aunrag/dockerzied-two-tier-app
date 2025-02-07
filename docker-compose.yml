@@ -1,0 +1,40 @@
+version: "3.8"
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile : Dockerfile
+    container_name: 1login_web
+    ports:
+      - "7070:80"
+    volumes:
+      - .:/var/www/html
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: test
+    depends_on:
+      - db
+    networks:
+      - app_network
+
+  db:
+    image: mariadb:latest
+    container_name: 1maridb_cont
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: test
+    volumes:
+      - db_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - app_network
+
+volumes:
+    db_data:
+
+networks:
+    app_network:
+      driver: bridge
+
